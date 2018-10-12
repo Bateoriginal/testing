@@ -32,20 +32,16 @@ def load_from_books_csv_file(csv_file_name):
         for books.
     '''
     csv_file = open(csv_file_name)
-    reader = csv.reader(csv_file) #list
+    reader = csv.reader(csv_file)
 
     authors = {}
     books = []
     books_authors = []
     for row in reader:
-
         assert len(row) == 3
         book_id = len(books)
         book = {'id': book_id, 'title': row[0], 'publication_year': row[1]}
         books.append(book)
-        #list of dicrionary books
-
-
         for author in authors_from_authors_string(row[2]):
             if author in authors:
                 author_id = authors[author]
@@ -53,8 +49,6 @@ def load_from_books_csv_file(csv_file_name):
                 author_id = len(authors)
                 authors[author] = author_id
             books_authors.append({'book_id': book_id, 'author_id': author_id})
-            # he is intentionally building the book_id and author_file
-
 
     csv_file.close()
     return (books, authors, books_authors)
@@ -82,17 +76,12 @@ def authors_from_authors_string(authors_string):
     authors = []
     single_author_strings = authors_string.split(' and ')
     for single_author_string in single_author_strings:
-        match = re.search(r'(.*) ([^ ]+) \(([0-9]+)-([0-9]*)\)', single_author_string)# it is a boolean expression 
-        # what is it doing? it is looking if there is a match 
+        match = re.search(r'(.*) ([^ ]+) \(([0-9]+)-([0-9]*)\)', single_author_string)
         if match:
             first_name = match.group(1)
-
             last_name = match.group(2)
-
             birth_year = match.group(3)
-
-            death_year = match.group(4)# why is it returning a empty string?
-
+            death_year = match.group(4)
             author = (last_name, first_name, birth_year, death_year)
             authors.append(author)
         else:
@@ -116,7 +105,7 @@ def save_authors_table(authors, csv_file_name):
         death year can be NULL. '''
     output_file = open(csv_file_name, 'w')
     writer = csv.writer(output_file)
-    for author in sorted(authors, key=authors.get): # what does the authors.get do? 
+    for author in sorted(authors, key=authors.get):
         (last_name, first_name, birth_year, death_year) = author
         if death_year == '':
             death_year = 'NULL'
